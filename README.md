@@ -14,7 +14,14 @@ npm run start
 
 ## Historias de usuario elegidas
 
-1. Las historias de usuario fueron corregidas haciendo uso de "clarita review", en [esta conversación](https://chatgpt.com/share/6a1da570-116c-83e9-84f7-ced4c2be6858) o en el archivo `./clarita_review_enlace.txt`.
+1. Las historias de usuario fueron corregidas haciendo uso de "clarita review", que pueden encontrar en [este enlace](https://chatgpt.com/share/6a1da570-116c-83e9-84f7-ced4c2be6858) o en el archivo `./clarita_review_enl.txt`.
+
+2. Las 2 Historias de Usuario elegidas para el desarrollo de la api fueron:
+
+| ID    | Nombre       | Issue                                                                                |
+| :---- | :----------- | :----------------------------------------------------------------------------------- |
+| US-01 | <historia 1> | [#1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/10) |
+| US-02 | <historia 2> | [#2](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/10) |
 
 ## Responsabilidades del equipo
 
