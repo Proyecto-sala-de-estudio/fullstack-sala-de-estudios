@@ -22,6 +22,9 @@ const swaggerSpec = swaggerJsdoc({
 })
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
+// ejemplo de ruta:
+// app.use('api/usuarios', usuariosRouter)
+
 app.listen(3000, () => {
     console.log('API en http://localhost:3000')
     console.log('Documentación en http://localhost:3000/docs')
