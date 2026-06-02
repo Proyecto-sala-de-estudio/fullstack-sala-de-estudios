@@ -1,7 +1,7 @@
 import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsdoc from 'swagger-jsdoc'
-import salasRouter from './src/routes/salas.js'
+import salasRouter from './routes/salas.js'
 
 const app = express()
 app.use(express.json())
