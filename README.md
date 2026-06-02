@@ -18,10 +18,10 @@ npm run start
 
 2. Las 2 Historias de Usuario elegidas para el desarrollo de la api fueron:
 
-| ID    | Nombre                                   | Issue                                                                               |
-| :---- | :--------------------------------------- | :---------------------------------------------------------------------------------- |
-| US-01 | HU01 - Consultar ubicación de salas      | [#1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/1) |
-| US-02 | HU05 - Filtrar salas por características | [#2](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/5) |
+| ID    | Nombre                              | Issue                                                                               |
+| :---- | :---------------------------------- | :---------------------------------------------------------------------------------- |
+| US-01 | HU01 - Consultar ubicación de salas | [#1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/1) |
+| US-03 | HU03 - Reservar sala                | [#3](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/3) |
 
 ## Responsabilidades del equipo
 
