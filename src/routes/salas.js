@@ -31,7 +31,7 @@ const router = Router()
 router.get('/', (req, res) => {
     const { capacidad, equipamiento, edificio } = req.query
 
-    let sql = 'SELECT * FROM salas WHERE estado = "disponible"'
+    let sql = "SELECT * FROM salas WHERE estado = 'disponible'"
     const params = []
 
     if (capacidad) {
