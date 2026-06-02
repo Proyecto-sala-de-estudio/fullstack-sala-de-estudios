@@ -1,0 +1,222 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "API Salas - Pruebas de Cobertura (HU01 y HU05)",
+    "collectionId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+    "dateExported": "2026-06-02T09:00:00.000Z",
+    "version": "1.4",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "tc-sala-01",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "1. [HU01][Happy Path] Obtener todas las salas disponibles",
+            "url": "http://localhost:3000/api/salas",
+            "method": "GET",
+            "sortNum": 10000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-02",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "2. [HU05][Valor Límite] Filtrar salas con capacidad mínima válida (Frontera)",
+            "url": "http://localhost:3000/api/salas?capacidad=1",
+            "method": "GET",
+            "sortNum": 20000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-03",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "3. [HU05][Clase Equivalencia] Filtrar salas con múltiples criterios válidos",
+            "url": "http://localhost:3000/api/salas?capacidad=4&equipamiento=Pizarra&edificio=Norte",
+            "method": "GET",
+            "sortNum": 30000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-04",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "4. [HU05][Clase Equivalencia] Filtrar por equipamiento inexistente (Retorno Vacío)",
+            "url": "http://localhost:3000/api/salas?equipamiento=PiscinaOlímpica",
+            "method": "GET",
+            "sortNum": 40000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-05",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "5. [HU01][Happy Path] Obtener detalles de una sala existente por ID",
+            "url": "http://localhost:3000/api/salas/1",
+            "method": "GET",
+            "sortNum": 50000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-06",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "6. [HU01][Clase Equivalencia] Error al obtener sala con ID inexistente",
+            "url": "http://localhost:3000/api/salas/9999",
+            "method": "GET",
+            "sortNum": 60000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-07",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "7. [CRUD][Happy Path] Crear una nueva sala de estudio válida",
+            "url": "http://localhost:3000/api/salas",
+            "method": "POST",
+            "sortNum": 70000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"nombre\": \"Sala de Certificación\",",
+                    "  \"edificio\": \"Edificio Tecnológico\",",
+                    "  \"piso\": \"Piso 3\",",
+                    "  \"capacidad\": 10,",
+                    "  \"equipamiento\": \"Proyector, Pizarra Interactiva\",",
+                    "  \"estado\": \"disponible\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "201"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-08",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "8. [CRUD][Valor Límite] Error al crear sala omitiendo campos obligatorios (nombre)",
+            "url": "http://localhost:3000/api/salas",
+            "method": "POST",
+            "sortNum": 80000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"edificio\": \"Edificio Norte\",",
+                    "  \"piso\": \"Piso 1\",",
+                    "  \"capacidad\": 5,",
+                    "  \"estado\": \"disponible\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "400"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-09",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "9. [CRUD][Clase Equivalencia] Error al modificar una sala con ID inexistente",
+            "url": "http://localhost:3000/api/salas/9999",
+            "method": "PUT",
+            "sortNum": 90000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": ["{", "  \"capacidad\": 15", "}"],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        },
+        {
+            "_id": "tc-sala-10",
+            "colId": "1b2c3d4e-5f6g-7h8i-9j0k-1l2m3n4o5p6q",
+            "containerId": "",
+            "name": "10. [CRUD][Clase Equivalencia] Error al eliminar una sala con ID inexistente",
+            "url": "http://localhost:3000/api/salas/9999",
+            "method": "DELETE",
+            "sortNum": 100000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        }
+    ],
+    "ref": "P5jakz0yw_mfQea3rGlGslLxJ4DwSLA43Dfd9_yhysY33_SD0tmpooDOYZ92qMKLqWI8jr-8tx7ZFWckewGxew"
+}

@@ -23,6 +23,10 @@ npm run start
 | US-01 | HU01 - Consultar ubicación de salas | [#1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/1) |
 | US-03 | HU03 - Reservar sala                | [#3](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/3) |
 
+## Casos de prueba para las APIs
+
+Los casos de prueba para las APIs se encuentran con archivos json en la carpeta `./thunder-collection/`, y se pueden importar a Thunder Client para su ejecución.
+
 ## Responsabilidades del equipo
 
 | Integrante        | Rol           | Ítems de la rúbrica a cargo           |

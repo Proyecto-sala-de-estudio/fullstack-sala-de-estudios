@@ -1,0 +1,253 @@
+{
+    "clientName": "Thunder Client",
+    "collectionName": "API Reservas - Pruebas de Cobertura (HU03)",
+    "collectionId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+    "dateExported": "2026-06-02T09:15:00.000Z",
+    "version": "1.4",
+    "folders": [],
+    "requests": [
+        {
+            "_id": "tc-res-01",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "1. [GET][Happy Path] Obtener la lista completa de reservas",
+            "url": "http://localhost:3000/api/reservas",
+            "method": "GET",
+            "sortNum": 10000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-02",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "2. [GET][Happy Path] Obtener detalles de una reserva existente por ID",
+            "url": "http://localhost:3000/api/reservas/1",
+            "method": "GET",
+            "sortNum": 20000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-03",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "3. [GET][Clase Equivalencia] Error al buscar una reserva con ID inexistente",
+            "url": "http://localhost:3000/api/reservas/9999",
+            "method": "GET",
+            "sortNum": 30000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-04",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "4. [POST][HU03][Happy Path] Registrar una reserva válida en sala disponible",
+            "url": "http://localhost:3000/api/reservas",
+            "method": "POST",
+            "sortNum": 40000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"salaId\": 1,",
+                    "  \"estudiante\": \"Martín Vega\",",
+                    "  \"fecha\": \"2026-06-15\",",
+                    "  \"hora\": \"14:30:00\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "201"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-05",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "5. [POST][Valor Límite] Error al crear reserva omitiendo un campo obligatorio",
+            "url": "http://localhost:3000/api/reservas",
+            "method": "POST",
+            "sortNum": 50000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"salaId\": 1,",
+                    "  \"fecha\": \"2026-06-15\",",
+                    "  \"hora\": \"14:30:00\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "400"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-06",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "6. [POST][Regra de Negocio] Error al reservar una sala que no existe",
+            "url": "http://localhost:3000/api/reservas",
+            "method": "POST",
+            "sortNum": 60000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"salaId\": 9999,",
+                    "  \"estudiante\": \"Ignacio Gómez\",",
+                    "  \"fecha\": \"2026-06-15\",",
+                    "  \"hora\": \"16:00:00\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-07",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "7. [POST][Regra de Negocio] Error al reservar sala con estado 'no disponible'",
+            "url": "http://localhost:3000/api/reservas",
+            "method": "POST",
+            "sortNum": 70000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"salaId\": 2,",
+                    "  \"estudiante\": \"Claudio Fuentes\",",
+                    "  \"fecha\": \"2026-06-16\",",
+                    "  \"hora\": \"09:00:00\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "400"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-08",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "8. [PUT][Happy Path] Modificar los datos básicos de una reserva existente",
+            "url": "http://localhost:3000/api/reservas/1",
+            "method": "PUT",
+            "sortNum": 80000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": [
+                    "{",
+                    "  \"estudiante\": \"Martín Vega Actualizado\",",
+                    "  \"hora\": \"15:00:00\"",
+                    "}"
+                ],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "200"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-09",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "9. [PUT][Regra de Negocio] Error al intentar cambiar reserva a sala inexistente",
+            "url": "http://localhost:3000/api/reservas/1",
+            "method": "PUT",
+            "sortNum": 90000,
+            "headers": [],
+            "body": {
+                "type": "json",
+                "raw": ["{", "  \"salaId\": 9999", "}"],
+                "form": []
+            },
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        },
+        {
+            "_id": "tc-res-10",
+            "colId": "2c3d4e5f-6g7h-8i9j-0k1l-2m3n4o5p6q7r",
+            "containerId": "",
+            "name": "10. [DELETE][Clase Equivalencia] Error al cancelar una reserva inexistente",
+            "url": "http://localhost:3000/api/reservas/9999",
+            "method": "DELETE",
+            "sortNum": 100000,
+            "headers": [],
+            "tests": [
+                {
+                    "type": "resCode",
+                    "custom": "",
+                    "action": "equal",
+                    "value": "404"
+                }
+            ]
+        }
+    ],
+    "ref": "P5jakz0yw_mfQea3rGlGslLxJ4DwSLA43Dfd9_yhysY33_SD0tmpooDOYZ92qMKLqWI8jr-8tx7ZFWckewGxew"
+}
