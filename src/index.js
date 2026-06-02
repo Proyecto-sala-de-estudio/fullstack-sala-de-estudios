@@ -1,7 +1,7 @@
 import express from 'express'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsdoc from 'swagger-jsdoc'
-import salasRouter from './src/routes/salas.js' // 1. Importamos la ruta de salas
+import salasRouter from './src/routes/salas.js'
 
 const app = express()
 app.use(express.json())
@@ -23,7 +23,6 @@ const swaggerSpec = swaggerJsdoc({
 })
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec))
 
-// 2. Registramos el router de salas
 app.use('/api/salas', salasRouter)
 
 app.listen(3000, () => {
