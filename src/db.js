@@ -10,8 +10,17 @@ db.exec(`
     edificio TEXT NOT NULL,
     piso TEXT NOT NULL,
     capacidad INTEGER NOT NULL,
-    equipamiento TEXT, -- Nuevo campo agregado para los filtros de la HU05
+    equipamiento TEXT,
     estado TEXT NOT NULL
+  );
+
+  CREATE TABLE IF NOT EXISTS reservas (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    salaId INTEGER NOT NULL,
+    estudiante TEXT NOT NULL,
+    fecha TEXT NOT NULL,
+    hora TEXT NOT NULL,
+    FOREIGN KEY (salaId) REFERENCES salas(id) ON DELETE CASCADE
   );
 `)
 
