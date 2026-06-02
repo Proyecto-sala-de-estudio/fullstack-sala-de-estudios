@@ -10,6 +10,7 @@ db.exec(`
     edificio TEXT NOT NULL,
     piso TEXT NOT NULL,
     capacidad INTEGER NOT NULL,
+    equipamiento TEXT, -- Nuevo campo agregado para los filtros de la HU05
     estado TEXT NOT NULL
   );
 `)

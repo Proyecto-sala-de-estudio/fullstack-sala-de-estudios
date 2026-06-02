@@ -2,57 +2,53 @@ import { Router } from 'express'
 import db from '../../db.js'
 
 const router = Router()
-
 /**
  * @swagger
  * /api/salas:
- *   get:
- *     summary: Lista y filtra las salas de estudio disponibles (HU01 y HU05)
- *     parameters:
- *       - in: query
- *         name: capacidad
- *         schema: { type: integer }
- *         description: Filtra por capacidad mínima
- *       - in: query
- *         name: equipamiento
- *         schema: { type: string }
- *         description: Filtra por equipamiento (ej. Pizarra)
- *       - in: query
- *         name: edificio
- *         schema: { type: string }
- *         description: Filtra por edificio
- *     responses:
- *       200:
- *         description: Array de salas filtradas con su ubicación
+ * get:
+ * summary: Lista y filtra las salas de estudio disponibles (HU01 y HU05)
+ * parameters:
+ * - in: query
+ * name: capacidad
+ * schema: { type: integer }
+ * description: Filtra salas con esta capacidad mínima o superior
+ * - in: query
+ * name: equipamiento
+ * schema: { type: string }
+ * description: Filtra por elementos en la sala (ej. Pizarra, Proyector)
+ * - in: query
+ * name: edificio
+ * schema: { type: string }
+ * description: Filtra salas por el edificio donde se encuentran
+ * responses:
+ * 200:
+ * description: Array de salas de estudio (filtradas si se aplican parámetros)
  */
 router.get('/', (req, res) => {
-    // Extraemos los filtros que vienen en la URL
+    // 1. Capturamos los parámetros de búsqueda de la URL (HU05)
     const { capacidad, equipamiento, edificio } = req.query
 
-    // Empezamos con una consulta base (solo salas disponibles)
+    // 2. Consulta base (Solo salas disponibles)
     let sql = 'SELECT * FROM salas WHERE estado = "disponible"'
     const params = []
 
-    // HU05 - CA1: Si el usuario envió filtro de capacidad, lo agregamos
+    // 3. Aplicamos filtros dinámicamente según los criterios de aceptación
     if (capacidad) {
         sql += ' AND capacidad >= ?'
         params.push(Number(capacidad))
     }
 
-    // HU05 - CA1: Si el usuario envió filtro de equipamiento
     if (equipamiento) {
         sql += ' AND equipamiento LIKE ?'
-        params.push(`%${equipamiento}%`) // LIKE busca coincidencias parciales
+        params.push(`%${equipamiento}%`) // LIKE permite buscar palabras dentro del texto
     }
 
-    // HU05 - CA1: Si el usuario envió filtro de ubicación (edificio)
     if (edificio) {
         sql += ' AND edificio = ?'
         params.push(edificio)
     }
 
-    // Ejecutamos la consulta. 
-    // HU05 - CA2: Solo retorna las salas que cumplen TODAS las condiciones agregadas
+    // 4. Ejecutamos la consulta con todos los filtros acumulados
     const salas = db.prepare(sql).all(...params)
     
     res.json(salas)
@@ -60,18 +56,18 @@ router.get('/', (req, res) => {
 /**
  * @swagger
  * /api/salas/{id}:
- *   get:
- *     summary: Muestra la información detallada de una sala, incluyendo edificio y piso (HU01 - CA2)
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema: { type: integer }
- *     responses:
- *       200:
- *         description: Detalle de la sala
- *       404:
- *         description: Sala no encontrada
+ * get:
+ * summary: Muestra la información detallada de una sala específica (HU01)
+ * parameters:
+ * - in: path
+ * name: id
+ * required: true
+ * schema: { type: integer }
+ * responses:
+ * 200:
+ * description: Detalle de la sala
+ * 404:
+ * description: Sala no encontrada
  */
 router.get('/:id', (req, res) => {
     const sala = db
