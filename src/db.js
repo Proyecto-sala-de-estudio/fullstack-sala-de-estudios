@@ -22,6 +22,13 @@ db.exec(`
     hora TEXT NOT NULL,
     FOREIGN KEY (salaId) REFERENCES salas(id) ON DELETE CASCADE
   );
+
+  CREATE TABLE IF NOT EXISTS cursos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    instructor TEXT NOT NULL,
+    creditos INTEGER NOT NULL
+  );
 `)
 
 export default db
