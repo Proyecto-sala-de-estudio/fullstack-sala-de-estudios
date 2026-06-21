@@ -25,34 +25,78 @@ API REST para la gestión de salas de estudio y reservas de salas. Construida co
 
 - **Node.js v18+** - entorno de ejecucion JavaScript
 - **Express** - framework web minimalista
-- **better-sqlite3** - base de datos SQL local, sin servidor
+- **PostgreSQL** - base de datos relacional para persistencia de datos
 - **Swagger (swagger-ui-express + swagger-jsdoc)** - documentacion interactiva
 - **Render** - plataforma de despliegue continuo
 - **GitHub Flow** - flujo de trabajo con Issues, Branches, Pull Requests y Releases
 
 ---
 
-## Pre-requisitos y Ejecucion
+## Pre-requisitos y Ejecución
 
 ### Pre-requisitos
 
 - Node.js v18+
 - Git
+- Docker
 
-### Ejecucion local
+### Paso a paso para levantar toda la infraestructura (Recomendado con Docker)
 
-Para poner en marcha la aplicacion localmente, ejecute los siguientes comandos en su terminal:
+Ejecute la siguiente secuencia de comandos en su terminal para clonar y levantar la base de datos, el backend y el frontend de forma integrada:
 
 ```bash
-# instalar dependencias
-npm install
+# 1. Clonar el repositorio del proyecto
+git clone https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios.git
 
-# ejecutar el servidor
-npm start
+# 2. Acceder al directorio del proyecto
+cd backend-sala-de-estudios
+
+# 3. Configurar variables de entorno (copiar la plantilla .env.example a .env)
+# Nota para Windows (PowerShell): use "Copy-Item .env.example .env"
+cp .env.example .env
+
+# 4. Levantar toda la infraestructura (Base de Datos + API Backend + Frontend)
+docker compose up --build -d
+
 ```
 
-- API local: http://localhost:3000
-- Documentacion: http://localhost:3000/docs
+Una vez que todos los servicios estén levantados y listos:
+- **Frontend (Interfaz de usuario):** http://localhost:3001
+- **API (Backend):** http://localhost:3000
+- **Documentación interactiva (Swagger):** http://localhost:3000/docs
+
+---
+
+### Paso a paso para la Ejecución Local Manual (Fuera de contenedores)
+
+Si prefiere levantar los servicios localmente en su máquina host, ejecute la siguiente secuencia de comandos:
+
+```bash
+# 1. Clonar y acceder al repositorio
+git clone https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios.git
+cd backend-sala-de-estudios
+
+# 2. Configurar variables de entorno (copiar plantilla)
+cp .env.example .env
+
+# 3. Levantar únicamente la base de datos PostgreSQL en segundo plano usando Docker
+# (Si tiene un servidor PostgreSQL local preinstalado, puede usarlo en su lugar)
+docker compose up -d db
+
+# 4. Instalar dependencias e iniciar el servidor de la API (Backend)
+npm install
+npm start
+
+# 5. En otra terminal, instalar dependencias e iniciar el Frontend (Next.js)
+cd frontend
+npm install
+npm run dev
+```
+
+Una vez levantado todo manualmente:
+- **Frontend (Interfaz de usuario):** http://localhost:3000 (o el puerto disponible que indique Next.js)
+- **API (Backend):** http://localhost:3000
+- **Documentación interactiva (Swagger):** http://localhost:3000/docs
 
 ---
 
