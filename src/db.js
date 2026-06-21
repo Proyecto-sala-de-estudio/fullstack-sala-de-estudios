@@ -1,34 +1,55 @@
-import Database from 'better-sqlite3'
+import pkg from 'pg'
+import dotenv from 'dotenv'
 
-const db = new Database('datos.db')
-db.pragma('foreign_keys = ON')
+dotenv.config()
 
-db.exec(`
-  CREATE TABLE IF NOT EXISTS salas (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT NOT NULL,
-    edificio TEXT NOT NULL,
-    piso TEXT NOT NULL,
-    capacidad INTEGER NOT NULL,
-    equipamiento TEXT,
-    estado TEXT NOT NULL
-  );
+const { Pool } = pkg
 
-  CREATE TABLE IF NOT EXISTS reservas (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    salaId INTEGER NOT NULL,
-    estudiante TEXT NOT NULL,
-    fecha TEXT NOT NULL,
-    hora TEXT NOT NULL,
-    FOREIGN KEY (salaId) REFERENCES salas(id) ON DELETE CASCADE
-  );
+const pool = new Pool({
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432', 10),
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || 'postgres',
+    database: process.env.DB_NAME || 'sala_estudios'
+})
 
-  CREATE TABLE IF NOT EXISTS cursos (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    nombre TEXT NOT NULL,
-    instructor TEXT NOT NULL,
-    creditos INTEGER NOT NULL
-  );
-`)
+// Inicialización de la base de datos de manera asíncrona
+const initDb = async () => {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS salas (
+                id SERIAL PRIMARY KEY,
+                nombre TEXT NOT NULL,
+                edificio TEXT NOT NULL,
+                piso TEXT NOT NULL,
+                capacidad INTEGER NOT NULL,
+                equipamiento TEXT,
+                estado TEXT NOT NULL
+            );
 
-export default db
+            CREATE TABLE IF NOT EXISTS reservas (
+                id SERIAL PRIMARY KEY,
+                "salaId" INTEGER NOT NULL,
+                estudiante TEXT NOT NULL,
+                fecha TEXT NOT NULL,
+                hora TEXT NOT NULL,
+                CONSTRAINT fk_sala FOREIGN KEY ("salaId") REFERENCES salas(id) ON DELETE CASCADE
+            );
+
+            CREATE TABLE IF NOT EXISTS cursos (
+                id SERIAL PRIMARY KEY,
+                nombre TEXT NOT NULL,
+                instructor TEXT NOT NULL,
+                creditos INTEGER NOT NULL
+            );
+        `)
+        console.log('Tablas inicializadas correctamente en PostgreSQL.')
+    } catch (error) {
+        console.error('Error al inicializar la base de datos PostgreSQL:', error)
+    }
+}
+
+// Ejecutar inicialización de forma asíncrona
+initDb()
+
+export default pool

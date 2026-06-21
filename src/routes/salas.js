@@ -28,29 +28,35 @@ const router = Router()
  *       '200':
  *         description: Array de salas de estudio (filtradas si se aplican parámetros)
  */
-router.get('/', (req, res) => {
-    const { capacidad, equipamiento, edificio } = req.query
+router.get('/', async (req, res) => {
+    try {
+        const { capacidad, equipamiento, edificio } = req.query
 
-    let sql = "SELECT * FROM salas WHERE estado = 'disponible'"
-    const params = []
+        let sql = "SELECT * FROM salas WHERE estado = 'disponible'"
+        const params = []
+        let idx = 1
 
-    if (capacidad) {
-        sql += ' AND capacidad >= ?'
-        params.push(Number(capacidad))
+        if (capacidad) {
+            sql += ` AND capacidad >= $${idx++}`
+            params.push(Number(capacidad))
+        }
+
+        if (equipamiento) {
+            sql += ` AND equipamiento LIKE $${idx++}`
+            params.push(`%${equipamiento}%`)
+        }
+
+        if (edificio) {
+            sql += ` AND edificio = $${idx++}`
+            params.push(edificio)
+        }
+
+        const result = await db.query(sql, params)
+        res.json(result.rows)
+    } catch (error) {
+        console.error('Error al obtener salas:', error)
+        res.status(500).json({ error: 'Error interno del servidor al obtener salas.' })
     }
-
-    if (equipamiento) {
-        sql += ' AND equipamiento LIKE ?'
-        params.push(`%${equipamiento}%`)
-    }
-
-    if (edificio) {
-        sql += ' AND edificio = ?'
-        params.push(edificio)
-    }
-
-    const salas = db.prepare(sql).all(...params)
-    res.json(salas)
 })
 
 /**
@@ -69,16 +75,19 @@ router.get('/', (req, res) => {
  *       '404':
  *         description: Sala no encontrada
  */
-router.get('/:id', (req, res) => {
-    const sala = db
-        .prepare('SELECT * FROM salas WHERE id = ?')
-        .get(req.params.id)
+router.get('/:id', async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM salas WHERE id = $1', [req.params.id])
 
-    if (!sala) {
-        return res.status(404).json({ error: 'Sala no encontrada' })
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Sala no encontrada' })
+        }
+
+        res.json(result.rows[0])
+    } catch (error) {
+        console.error('Error al obtener detalle de sala:', error)
+        res.status(500).json({ error: 'Error interno del servidor al obtener detalle de sala.' })
     }
-
-    res.json(sala)
 })
 
 /**
@@ -117,32 +126,36 @@ router.get('/:id', (req, res) => {
  *       '400':
  *         description: Error en los datos enviados
  */
-router.post('/', (req, res) => {
-    const { nombre, edificio, piso, capacidad, equipamiento, estado } = req.body
+router.post('/', async (req, res) => {
+    try {
+        const { nombre, edificio, piso, capacidad, equipamiento, estado } = req.body
 
-    // Validación básica por si faltan campos obligatorios
-    if (!nombre || !edificio || !piso || !capacidad || !estado) {
-        return res.status(400).json({ error: 'Faltan campos obligatorios' })
+        // Validación básica por si faltan campos obligatorios
+        if (!nombre || !edificio || !piso || !capacidad || !estado) {
+            return res.status(400).json({ error: 'Faltan campos obligatorios' })
+        }
+
+        const sql = `
+            INSERT INTO salas (nombre, edificio, piso, capacidad, equipamiento, estado)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING id
+        `
+
+        const result = await db.query(sql, [nombre, edificio, piso, Number(capacidad), equipamiento, estado])
+
+        res.status(201).json({
+            id: result.rows[0].id,
+            nombre,
+            edificio,
+            piso,
+            capacidad: Number(capacidad),
+            equipamiento,
+            estado
+        })
+    } catch (error) {
+        console.error('Error al crear sala:', error)
+        res.status(500).json({ error: 'Error interno del servidor al crear sala.' })
     }
-
-    const sql = `
-        INSERT INTO salas (nombre, edificio, piso, capacidad, equipamiento, estado)
-        VALUES (?, ?, ?, ?, ?, ?)
-    `
-
-    const info = db
-        .prepare(sql)
-        .run(nombre, edificio, piso, Number(capacidad), equipamiento, estado)
-
-    res.status(201).json({
-        id: info.lastInsertRowid,
-        nombre,
-        edificio,
-        piso,
-        capacidad,
-        equipamiento,
-        estado
-    })
 })
 
 /**
@@ -181,50 +194,56 @@ router.post('/', (req, res) => {
  *       '404':
  *         description: Sala no encontrada
  */
-router.put('/:id', (req, res) => {
-    const { id } = req.params
-    const { nombre, edificio, piso, capacidad, equipamiento, estado } = req.body
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params
+        const { nombre, edificio, piso, capacidad, equipamiento, estado } = req.body
 
-    const salaExistente = db.prepare('SELECT * FROM salas WHERE id = ?').get(id)
-    if (!salaExistente) {
-        return res.status(404).json({ error: 'Sala no encontrada' })
+        const resultExistente = await db.query('SELECT * FROM salas WHERE id = $1', [id])
+        if (resultExistente.rows.length === 0) {
+            return res.status(404).json({ error: 'Sala no encontrada' })
+        }
+        const salaExistente = resultExistente.rows[0]
+
+        const nuevoNombre = nombre !== undefined ? nombre : salaExistente.nombre
+        const nuevoEdificio =
+            edificio !== undefined ? edificio : salaExistente.edificio
+        const nuevoPiso = piso !== undefined ? piso : salaExistente.piso
+        const nuevaCapacidad =
+            capacidad !== undefined ? Number(capacidad) : salaExistente.capacidad
+        const nuevoEquipamiento =
+            equipamiento !== undefined ? equipamiento : salaExistente.equipamiento
+        const nuevoEstado = estado !== undefined ? estado : salaExistente.estado
+
+        const sql = `
+            UPDATE salas 
+            SET nombre = $1, edificio = $2, piso = $3, capacidad = $4, equipamiento = $5, estado = $6
+            WHERE id = $7
+        `
+
+        await db.query(sql, [
+            nuevoNombre,
+            nuevoEdificio,
+            nuevoPiso,
+            nuevaCapacidad,
+            nuevoEquipamiento,
+            nuevoEstado,
+            id
+        ])
+
+        res.json({
+            id: Number(id),
+            nombre: nuevoNombre,
+            edificio: nuevoEdificio,
+            piso: nuevoPiso,
+            capacidad: nuevaCapacidad,
+            equipamiento: nuevoEquipamiento,
+            estado: nuevoEstado
+        })
+    } catch (error) {
+        console.error('Error al actualizar sala:', error)
+        res.status(500).json({ error: 'Error interno del servidor al actualizar sala.' })
     }
-
-    const nuevoNombre = nombre !== undefined ? nombre : salaExistente.nombre
-    const nuevoEdificio =
-        edificio !== undefined ? edificio : salaExistente.edificio
-    const nuevoPiso = piso !== undefined ? piso : salaExistente.piso
-    const nuevaCapacidad =
-        capacidad !== undefined ? Number(capacidad) : salaExistente.capacidad
-    const nuevoEquipamiento =
-        equipamiento !== undefined ? equipamiento : salaExistente.equipamiento
-    const nuevoEstado = estado !== undefined ? estado : salaExistente.estado
-
-    const sql = `
-        UPDATE salas 
-        SET nombre = ?, edificio = ?, piso = ?, capacidad = ?, equipamiento = ?, estado = ?
-        WHERE id = ?
-    `
-
-    db.prepare(sql).run(
-        nuevoNombre,
-        nuevoEdificio,
-        nuevoPiso,
-        nuevaCapacidad,
-        nuevoEquipamiento,
-        nuevoEstado,
-        id
-    )
-
-    res.json({
-        id: Number(id),
-        nombre: nuevoNombre,
-        edificio: nuevoEdificio,
-        piso: nuevoPiso,
-        capacidad: nuevaCapacidad,
-        equipamiento: nuevoEquipamiento,
-        estado: nuevoEstado
-    })
 })
 
 /**
@@ -244,18 +263,23 @@ router.put('/:id', (req, res) => {
  *       '404':
  *         description: Sala no encontrada
  */
-router.delete('/:id', (req, res) => {
-    const { id } = req.params
+router.delete('/:id', async (req, res) => {
+    try {
+        const { id } = req.params
 
-    const info = db.prepare('DELETE FROM salas WHERE id = ?').run(id)
+        const result = await db.query('DELETE FROM salas WHERE id = $1', [id])
 
-    if (info.changes === 0) {
-        return res
-            .status(404)
-            .json({ error: 'Sala no encontrada o ya eliminada' })
+        if (result.rowCount === 0) {
+            return res
+                .status(404)
+                .json({ error: 'Sala no encontrada o ya eliminada' })
+        }
+
+        res.json({ mensaje: `Sala con id ${id} eliminada correctamente` })
+    } catch (error) {
+        console.error('Error al eliminar sala:', error)
+        res.status(500).json({ error: 'Error interno del servidor al eliminar sala.' })
     }
-
-    res.json({ mensaje: `Sala con id ${id} eliminada correctamente` })
 })
 
 export default router

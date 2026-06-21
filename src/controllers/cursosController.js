@@ -3,9 +3,9 @@ import * as cursosService from '../services/cursosService.js'
 /**
  * Controlador para obtener todos los cursos.
  */
-export const getCursos = (req, res) => {
+export const getCursos = async (req, res) => {
     try {
-        const cursos = cursosService.obtenerTodos()
+        const cursos = await cursosService.obtenerTodos()
         res.json(cursos)
     } catch (error) {
         console.error('Error al obtener cursos:', error)
@@ -17,7 +17,7 @@ export const getCursos = (req, res) => {
  * Controlador para registrar un nuevo curso.
  * Valida que nombre e instructor no estén vacíos y créditos sea un entero positivo mayor que cero.
  */
-export const crearCurso = (req, res) => {
+export const crearCurso = async (req, res) => {
     try {
         const { nombre, instructor, creditos } = req.body
 
@@ -39,7 +39,7 @@ export const crearCurso = (req, res) => {
             return res.status(400).json({ error: 'El campo "créditos" debe ser un número entero positivo mayor que cero.' })
         }
 
-        const nuevoCurso = cursosService.crear({
+        const nuevoCurso = await cursosService.crear({
             nombre: nombre.trim(),
             instructor: instructor.trim(),
             creditos: creditosNum
