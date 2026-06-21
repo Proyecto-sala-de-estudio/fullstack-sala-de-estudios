@@ -84,10 +84,12 @@ cp .env.example .env
 docker compose up -d db
 
 # 4. Instalar dependencias e iniciar el servidor de la API (Backend)
+cd backend
 npm install
-npm start
+npm run dev
+cd ..
 
-# 5. En otra terminal, instalar dependencias e iniciar el Frontend (Next.js)
+# 5. En otra terminal (desde la raíz del proyecto), instalar dependencias e iniciar el Frontend (Next.js)
 cd frontend
 npm install
 npm run dev
