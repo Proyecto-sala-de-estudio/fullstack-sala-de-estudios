@@ -1,6 +1,6 @@
 # API Sala de Estudios
 
-API REST para la gestion de salas de estudio, reservas de salas y cursos academicos. Construida con Node.js, Express y SQLite, documentada con Swagger y desplegada en Render.
+API REST para la gestión de salas de estudio y reservas de salas. Construida con Node.js, Express y PostgreSQL, documentada con Swagger y desplegada en Render.
 
 - API en produccion: https://backend-sala-de-estudios.onrender.com
 - Documentacion interactiva: https://backend-sala-de-estudios.onrender.com/docs
@@ -70,8 +70,6 @@ npm start
 | `POST` | `/api/reservas` | Crea una nueva reserva de sala |
 | `PUT` | `/api/reservas/:id` | Modifica los datos de una reserva existente |
 | `DELETE` | `/api/reservas/:id` | Elimina o cancela una reserva existente |
-| `GET` | `/api/cursos` | Lista todos los cursos disponibles |
-| `POST` | `/api/cursos` | Registra un nuevo curso en el catalogo |
 | `GET` | `/docs` | Documentacion Swagger interactiva |
 
 ---
@@ -101,17 +99,6 @@ npm start
   "estudiante": "Juan Perez",
   "fecha": "2026-06-20",
   "hora": "14:00"
-}
-```
-
-### Curso
-
-```json
-{
-  "id": 1,
-  "nombre": "Calculo Diferencial",
-  "instructor": "Dra. Ana Perez",
-  "creditos": 4
 }
 ```
 

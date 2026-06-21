@@ -27,8 +27,8 @@ El sistema DEBE almacenar los datos de la base de datos de manera persistente ut
 - **THEN** todas las tablas y datos creados anteriormente permanecen sin cambios.
 
 ### Requirement: Inicialización Automática del Esquema
-El sistema DEBE inicializar de forma automática las tablas (`salas`, `reservas`, `cursos`) si no existen al momento de iniciar la aplicación Express y conectarse a la base de datos.
+El sistema DEBE inicializar de forma automática las tablas (`salas`, `reservas`) si no existen al momento de iniciar la aplicación Express y conectarse a la base de datos.
 
 #### Scenario: Ejecución de scripts de creación de tablas
 - **WHEN** la aplicación Express se inicia y se conecta a una base de datos PostgreSQL vacía
-- **THEN** se crean las tablas `salas` (con id serial auto-incremental), `reservas` (con clave foránea a `salas`) y `cursos` (con id serial auto-incremental).
+- **THEN** se crean las tablas `salas` (con id serial auto-incremental) y `reservas` (con clave foránea a `salas`).

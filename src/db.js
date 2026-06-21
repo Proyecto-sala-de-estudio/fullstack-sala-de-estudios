@@ -40,13 +40,6 @@ const initDb = async (retries = 10, delay = 2000) => {
                     hora TEXT NOT NULL,
                     CONSTRAINT fk_sala FOREIGN KEY ("salaId") REFERENCES salas(id) ON DELETE CASCADE
                 );
-
-                CREATE TABLE IF NOT EXISTS cursos (
-                    id SERIAL PRIMARY KEY,
-                    nombre TEXT NOT NULL,
-                    instructor TEXT NOT NULL,
-                    creditos INTEGER NOT NULL
-                );
             `)
             console.log('Tablas inicializadas correctamente en PostgreSQL.')
             return
