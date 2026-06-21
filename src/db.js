@@ -13,43 +13,56 @@ const pool = new Pool({
     database: process.env.DB_NAME || 'sala_estudios'
 })
 
-// Inicialización de la base de datos de manera asíncrona
-const initDb = async () => {
-    try {
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS salas (
-                id SERIAL PRIMARY KEY,
-                nombre TEXT NOT NULL,
-                edificio TEXT NOT NULL,
-                piso TEXT NOT NULL,
-                capacidad INTEGER NOT NULL,
-                equipamiento TEXT,
-                estado TEXT NOT NULL
-            );
+// Inicialización de la base de datos con reintentos y tolerancia a fallos en el arranque
+const initDb = async (retries = 10, delay = 2000) => {
+    while (retries > 0) {
+        try {
+            // Verificar conectividad básica primero
+            await pool.query('SELECT 1')
 
-            CREATE TABLE IF NOT EXISTS reservas (
-                id SERIAL PRIMARY KEY,
-                "salaId" INTEGER NOT NULL,
-                estudiante TEXT NOT NULL,
-                fecha TEXT NOT NULL,
-                hora TEXT NOT NULL,
-                CONSTRAINT fk_sala FOREIGN KEY ("salaId") REFERENCES salas(id) ON DELETE CASCADE
-            );
+            // Crear el esquema si la conexión es exitosa
+            await pool.query(`
+                CREATE TABLE IF NOT EXISTS salas (
+                    id SERIAL PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    edificio TEXT NOT NULL,
+                    piso TEXT NOT NULL,
+                    capacidad INTEGER NOT NULL,
+                    equipamiento TEXT,
+                    estado TEXT NOT NULL
+                );
 
-            CREATE TABLE IF NOT EXISTS cursos (
-                id SERIAL PRIMARY KEY,
-                nombre TEXT NOT NULL,
-                instructor TEXT NOT NULL,
-                creditos INTEGER NOT NULL
-            );
-        `)
-        console.log('Tablas inicializadas correctamente en PostgreSQL.')
-    } catch (error) {
-        console.error('Error al inicializar la base de datos PostgreSQL:', error)
+                CREATE TABLE IF NOT EXISTS reservas (
+                    id SERIAL PRIMARY KEY,
+                    "salaId" INTEGER NOT NULL,
+                    estudiante TEXT NOT NULL,
+                    fecha TEXT NOT NULL,
+                    hora TEXT NOT NULL,
+                    CONSTRAINT fk_sala FOREIGN KEY ("salaId") REFERENCES salas(id) ON DELETE CASCADE
+                );
+
+                CREATE TABLE IF NOT EXISTS cursos (
+                    id SERIAL PRIMARY KEY,
+                    nombre TEXT NOT NULL,
+                    instructor TEXT NOT NULL,
+                    creditos INTEGER NOT NULL
+                );
+            `)
+            console.log('Tablas inicializadas correctamente en PostgreSQL.')
+            return
+        } catch (error) {
+            retries--
+            console.warn(`[Base de Datos] No se pudo conectar a PostgreSQL (${error.message}). Reintentando en ${delay / 1000}s... Intentos restantes: ${retries}`)
+            if (retries === 0) {
+                console.error('[Base de Datos] Error crítico: No se pudo establecer conexión con PostgreSQL después de varios intentos.')
+                process.exit(1)
+            }
+            await new Promise((resolve) => setTimeout(resolve, delay))
+        }
     }
 }
 
-// Ejecutar inicialización de forma asíncrona
+// Ejecutar inicialización
 initDb()
 
 export default pool
