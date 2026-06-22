@@ -40,30 +40,41 @@ PORT=3000
 NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-### Instalación y ejecución (sin Docker)
+Existen dos opciones alternativas e independientes para realizar la instalación y ejecución del sistema:
+
+### Opción A: Ejecución local (Modo Release - Recomendado)
+Esta opción compila y despliega de manera automática y contenerizada la base de datos, el backend y el frontend:
+```bash
+docker compose up --build
+```
+
+### Opción B: Ejecución local (Modo Dev - Paso a Paso)
+Esta opción permite levantar los servicios en la máquina host local para desarrollo:
 ```bash
 # 1. Configurar variables de entorno en la raíz
 cp .env.example .env
 
-# 2. Iniciar el servicio de base de datos PostgreSQL
+# 2. Iniciar únicamente el servicio de base de datos PostgreSQL mediante Docker
 docker compose up -d db
 
-# 3. Instalar e iniciar el Backend (Express)
+# 3. Instalar dependencias e iniciar el Backend (Express)
 cd backend
 npm install
 npm run dev
 cd ..
 
-# 4. Instalar e iniciar el Frontend (Next.js)
+# 4. Instalar dependencias e iniciar el Frontend (Next.js)
 cd frontend
 npm install
 npm run dev
 ```
 
-### Instalación y ejecución (con Docker)
-```bash
-docker-compose up --build
-```
+### Rutas de acceso de los servicios
+Una vez que los servicios estén levantados y listos:
+- **Frontend (Interfaz de usuario):** `http://localhost:3001`
+- **Backend (API de reservas):** `http://localhost:3000`
+- **Documentación interactiva (Swagger):** `http://localhost:3000/docs`
+- **Base de Datos (PostgreSQL):** `localhost:5432`
 
 ## Responsabilidades del equipo
 | Integrante | Rol(es) | Ítems de la rúbrica a cargo |
