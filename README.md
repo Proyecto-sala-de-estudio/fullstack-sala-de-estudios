@@ -83,10 +83,10 @@ Una vez que los servicios estén levantados y listos:
 ## Responsabilidades del equipo
 | Integrante | Rol(es) | Ítems de la rúbrica a cargo |
 |------------|---------|-----------------------------|
-| Vicente Arancibia | Scrum Master / Quality Assurance | Demostración de la HU y criterios de aceptación, Casos de prueba |
-| Matías Henríquez | Arquitecto | Diagrama de despliegue y comp., Diagrama de componentes, Diagrama de secuencia |
-| José Leiva | Technical Lead | GitHub workflow, Deuda técnica / code smells |
-| Martín León | Developer | HU completa, Instalación y ejecución |
+| Vicente Arancibia | Scrum Master | 1.1, 2.1, 2.2, 2.3, 2.4 |
+| Matías Henríquez | Arquitecto | 3.1, 3.2, 3.3 |
+| José Leiva | Technical Lead y Bonus | 1.3, 5.1, Bonus |
+| Martín León | Quality Assurance | 1.2, 4.1 |
 
 ## Bonus (opcional)
 - Contenedores: sí — docker-compose en ./docker-compose.yml
