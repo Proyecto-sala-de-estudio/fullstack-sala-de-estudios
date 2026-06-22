@@ -5,6 +5,14 @@
 **quiero** reservar una sala de estudio en un edificio, fecha y horario específicos,  
 **para** asegurar un espacio de trabajo disponible para estudiar individualmente o en grupo.
 
+## Flujo Principal
+1. El estudiante ingresa a la aplicación web.
+2. El sistema muestra la lista de salas disponibles recuperada desde el backend.
+3. El estudiante selecciona una sala e ingresa su nombre, fecha y hora deseada.
+4. El estudiante hace clic en "Reservar".
+5. El backend verifica en la base de datos si la sala está libre en ese horario.
+6. Si está libre, la reserva se guarda en la base de datos y se muestra un mensaje de éxito. Si no, se rechaza con un mensaje de error de solapamiento.
+
 ## Criterios de aceptación
 - **CA1 (Reserva Exitosa):** El sistema permite seleccionar una sala de estudio del catálogo, ingresar el nombre del estudiante, una fecha y hora específicas. Si la sala está libre y disponible, la reserva se almacena en la base de datos y la interfaz se actualiza inmediatamente mostrando un mensaje de éxito.
 - **CA2 (Control de Solapamiento):** Si se intenta registrar una reserva en una sala que ya posee una reserva para la misma fecha y hora exacta, el backend debe rechazar la solicitud con código `400` y un mensaje de error explicativo, y el frontend debe notificar al usuario de manera clara sin alterar los datos actuales.

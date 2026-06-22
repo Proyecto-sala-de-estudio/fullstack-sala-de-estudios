@@ -7,7 +7,6 @@ Plataforma para la gestión y reserva de salas de estudio en diferentes edificio
 | ID    | Nombre                    | Issue |
 |-------|---------------------------|-------|
 | US-03 | Reservar sala             | [#3](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/3)    |
-(Debe integrar: búsqueda con filtro, CRUD de una entidad y transacción que une 2+ entidades)
 
 ## Artefactos del proyecto
 | Artefacto                          | Ubicación / enlace          |
@@ -42,8 +41,8 @@ NEXT_PUBLIC_API_URL=http://localhost:3000
 
 Existen dos opciones alternativas e independientes para realizar la instalación y ejecución del sistema:
 
-### Opción A: Ejecución local (Modo Release - Recomendado)
-Esta opción compila y despliega de manera automática y contenerizada la base de datos, el backend y el frontend:
+### Instalación y ejecución (con Docker)
+Esta opción compila y despliega de manera local y contenerizada la base de datos, el backend y el frontend:
 ```bash
 # 1. Configurar variables de entorno en la raíz
 cp .env.example .env
@@ -52,7 +51,7 @@ cp .env.example .env
 docker compose up --build
 ```
 
-### Opción B: Ejecución local (Modo Dev - Paso a Paso)
+### Instalación y ejecución (modo dev)
 Esta opción permite levantar los servicios en la máquina host local para desarrollo:
 ```bash
 # 1. Configurar variables de entorno en la raíz

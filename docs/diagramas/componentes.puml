@@ -1,0 +1,27 @@
+@startuml
+skinparam componentStyle uml2
+
+package "Frontend (Next.js)" {
+  [Componentes UI] as UI
+  [Páginas (Routing)] as Pages
+}
+
+package "Backend (Express)" {
+  [Enrutador API] as Router
+  [Controladores] as Controllers
+  [Acceso a Datos (Pool)] as Models
+}
+
+database "PostgreSQL" as DB
+
+interface "HTTP REST API (Puerto 3000)" as REST
+interface "SQL Protocol (Puerto 5432)" as SQL
+
+UI ..> Pages : usa
+Pages ..> REST : <<use>>
+REST -- Router : <<provide>>
+Router ..> Controllers : delega
+Controllers ..> Models : usa
+Models ..> SQL : <<use>>
+SQL -- DB : <<provide>>
+@enduml
