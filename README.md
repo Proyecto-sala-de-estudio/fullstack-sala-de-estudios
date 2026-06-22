@@ -1,240 +1,89 @@
-# API Sala de Estudios
+# Sistema de Reservas de Salas de Estudio
 
-API REST para la gestión de salas de estudio y reservas de salas. Construida con Node.js, Express y PostgreSQL, documentada con Swagger y desplegada en Render.
+## Descripción del sistema
+Plataforma para la gestión y reserva de salas de estudio en diferentes edificios, pisos y horarios, diseñada para optimizar los espacios de trabajo colaborativo e individual de los estudiantes.
 
-- API en produccion: https://backend-sala-de-estudios.onrender.com
-- Documentacion interactiva: https://backend-sala-de-estudios.onrender.com/docs
+## Historia de usuario implementada
+| ID    | Nombre                    | Issue |
+|-------|---------------------------|-------|
+| US-03 | Reservar sala             | #3    |
+(Debe integrar: búsqueda con filtro, CRUD de una entidad y transacción que une 2+ entidades)
 
----
+## Artefactos del proyecto
+| Artefacto                          | Ubicación / enlace          |
+|------------------------------------|-----------------------------|
+| Modelo de dominio                  | [Pendiente de creación]     |
+| Diagrama de casos de uso           | [Pendiente de creación]     |
+| Especificación de HU               | ./EspecificacionHU.md       |
+| Diagrama de estados                | [Pendiente de creación]     |
+| Diagrama de despliegue y comp.     | [Pendiente de creación]     |
+| Diagrama de componentes            | [Pendiente de creación]     |
+| Diagrama de secuencia              | [Pendiente de creación]     |
+| Casos de prueba                    | ./CasosDePrueba.md          |
+| Deuda técnica / code smells        | ./DeudaTecnica.md           |
 
-## Contenido
-
-- [Tecnologias](#tecnologias)
-- [Pre-requisitos y Ejecucion](#pre-requisitos-y-ejecucion)
-- [Endpoints](#endpoints)
-- [Modelos de datos](#modelos-de-datos)
-- [Historias de usuario elegidas](#historias-de-usuario-elegidas)
-- [Casos de prueba para las APIs](#casos-de-prueba-para-las-apis)
-- [Mapeo SWEBOK a GitHub Flow](#mapeo-swebok-a-github-flow)
-- [Evidencia del flujo de Gestion de la Configuracion aplicado](#evidencia-del-flujo-de-gestion-de-la-configuracion-aplicado)
-- [Responsabilidades del equipo](#responsabilidades-del-equipo)
-
----
-
-## Tecnologias
-
-- **Node.js v18+** - entorno de ejecucion JavaScript
-- **Express** - framework web minimalista
-- **PostgreSQL** - base de datos relacional para persistencia de datos
-- **Swagger (swagger-ui-express + swagger-jsdoc)** - documentacion interactiva
-- **Render** - plataforma de despliegue continuo
-- **GitHub Flow** - flujo de trabajo con Issues, Branches, Pull Requests y Releases
-
----
-
-## Pre-requisitos y Ejecución
-
-### Pre-requisitos
-
+## Instrucciones de instalación y ejecución
+### Requisitos previos
 - Node.js v18+
-- Git
-- Docker
+- PostgreSQL (si se ejecuta sin Docker)
+- Docker y Docker Compose (para ejecución en contenedores)
 
-### Paso a paso para levantar toda la infraestructura (Recomendado con Docker)
-
-Ejecute la siguiente secuencia de comandos en su terminal para clonar y levantar la base de datos, el backend y el frontend de forma integrada:
-
-```bash
-# 1. Clonar el repositorio del proyecto
-git clone https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios.git
-
-# 2. Acceder al directorio del proyecto
-cd backend-sala-de-estudios
-
-# 3. Configurar variables de entorno (copiar la plantilla .env.example a .env)
-# Nota para Windows (PowerShell): use "Copy-Item .env.example .env"
-cp .env.example .env
-
-# 4. Levantar toda la infraestructura (Base de Datos + API Backend + Frontend)
-docker compose up --build -d
-
+### Variables de entorno
+Se debe crear un archivo `.env` en la raíz del proyecto basándose en `.env.example`:
+```env
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=sala_estudios
+PORT=3000
+NEXT_PUBLIC_API_URL=http://localhost:3000
 ```
 
-Una vez que todos los servicios estén levantados y listos:
-- **Frontend (Interfaz de usuario):** http://localhost:3001
-- **API (Backend):** http://localhost:3000
-- **Documentación interactiva (Swagger):** http://localhost:3000/docs
+Existen dos opciones alternativas e independientes para realizar la instalación y ejecución del sistema:
 
----
-
-### Paso a paso para la Ejecución Local Manual (Fuera de contenedores)
-
-Si prefiere levantar los servicios localmente en su máquina host, ejecute la siguiente secuencia de comandos:
-
+### Opción A: Ejecución local (Modo Release - Recomendado)
+Esta opción compila y despliega de manera automática y contenerizada la base de datos, el backend y el frontend:
 ```bash
-# 1. Clonar y acceder al repositorio
-git clone https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios.git
-cd backend-sala-de-estudios
+docker compose up --build
+```
 
-# 2. Configurar variables de entorno (copiar plantilla)
+### Opción B: Ejecución local (Modo Dev - Paso a Paso)
+Esta opción permite levantar los servicios en la máquina host local para desarrollo:
+```bash
+# 1. Configurar variables de entorno en la raíz
 cp .env.example .env
 
-# 3. Levantar únicamente la base de datos PostgreSQL en segundo plano usando Docker
-# (Si tiene un servidor PostgreSQL local preinstalado, puede usarlo en su lugar)
+# 2. Iniciar únicamente el servicio de base de datos PostgreSQL mediante Docker
 docker compose up -d db
 
-# 4. Instalar dependencias e iniciar el servidor de la API (Backend)
+# 3. Instalar dependencias e iniciar el Backend (Express)
 cd backend
 npm install
 npm run dev
 cd ..
 
-# 5. En otra terminal (desde la raíz del proyecto), instalar dependencias e iniciar el Frontend (Next.js)
+# 4. Instalar dependencias e iniciar el Frontend (Next.js)
 cd frontend
 npm install
 npm run dev
 ```
 
-Una vez levantado todo manualmente:
-- **Frontend (Interfaz de usuario):** http://localhost:3000 (o el puerto disponible que indique Next.js)
-- **API (Backend):** http://localhost:3000
-- **Documentación interactiva (Swagger):** http://localhost:3000/docs
-
----
-
-## Endpoints
-
-| Metodo | Ruta | Descripcion |
-| --- | --- | --- |
-| `GET` | `/api/salas` | Lista y filtra las salas de estudio disponibles |
-| `GET` | `/api/salas/:id` | Muestra la informacion detallada de una sala especifica |
-| `POST` | `/api/salas` | Agrega una nueva sala de estudio |
-| `PUT` | `/api/salas/:id` | Modifica los datos de una sala existente |
-| `DELETE` | `/api/salas/:id` | Elimina una sala de la base de datos |
-| `GET` | `/api/reservas` | Lista todas las reservas realizadas |
-| `GET` | `/api/reservas/:id` | Obtiene los detalles de una reserva especifica |
-| `POST` | `/api/reservas` | Crea una nueva reserva de sala |
-| `PUT` | `/api/reservas/:id` | Modifica los datos de una reserva existente |
-| `DELETE` | `/api/reservas/:id` | Elimina o cancela una reserva existente |
-| `GET` | `/docs` | Documentacion Swagger interactiva |
-
----
-
-## Modelos de datos
-
-### Sala
-
-```json
-{
-  "id": 1,
-  "nombre": "Sala A",
-  "edificio": "Edificio Central",
-  "piso": "Piso 2",
-  "capacidad": 10,
-  "equipamiento": "Pizarra, Proyector",
-  "estado": "disponible"
-}
-```
-
-### Reserva
-
-```json
-{
-  "id": 1,
-  "salaId": 1,
-  "estudiante": "Juan Perez",
-  "fecha": "2026-06-20",
-  "hora": "14:00"
-}
-```
-
----
-
-## Historias de usuario elegidas
-
-1. Las historias de usuario fueron corregidas haciendo uso de "clarita review", que pueden encontrar en [este enlace](https://chatgpt.com/share/6a1da570-116c-83e9-84f7-ced4c2be6858) o en el archivo `./clarita_review_enl.txt`.
-
-2. Las 2 Historias de Usuario elegidas para el desarrollo de la api fueron:
-
-| ID    | Nombre                              | Issue                                                                               |
-| :---- | :---------------------------------- | :---------------------------------------------------------------------------------- |
-| US-01 | HU01 - Consultar ubicación de salas | [#1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/1) |
-| US-03 | HU03 - Reservar sala                | [#3](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/3) |
-
----
-
-## Casos de prueba para las APIs
-
-Los casos de prueba para las APIs se encuentran con archivos json en la carpeta `./thunder-collection/`, y se pueden importar a Thunder Client para su ejecución.
-
----
-
-## Mapeo SWEBOK a GitHub Flow
-
-Esta tabla resume la correspondencia entre los procesos fundamentales de gestion de la configuracion (SWEBOK Capitulo 8) y el flujo de trabajo implementado en GitHub:
-
-| Concepto SWEBOK Cap. 8 | GitHub Flow |
-| --- | --- |
-| Elemento de Configuracion (2.1.2) | Archivos de codigo fuente, base de datos y esquemas rastreados por Git |
-| Linea Base (2.3) | Rama `main` protegida y tags de version (releases) |
-| Sucesion (2.5) | Historial de commits organizados cronologicamente |
-| Dependencia (2.5) | Archivos package.json y package-lock.json |
-| Solicitud de Cambio (3.1) | GitHub Issues especificando mejoras y fallos |
-| Comite de Control (3.1.1) | Aprobadores de Pull Requests mediante Branch Protection Rules |
-| Implementar cambio (3.2) | Creacion de ramas feature e integracion mediante Merge |
-| Auditoria en proceso (5.3) | Proceso de Code Review detallado en los Pull Requests |
-| Gestion de versiones (6.2) | Uso de tags semanticos en Git (ej. v1.0.0) |
-| Biblioteca de software (2.6) | Releases de GitHub con codigos fuente adjuntos |
-
----
-
-## Evidencia del flujo de Gestion de la Configuracion aplicado
-
-Este repositorio fue construido siguiendo el flujo de **GitHub Flow** aplicando los procesos de **Software Configuration Management (SWEBOK Cap. 8)**.
-
-### Iteracion HU01 - Consultar ubicacion de salas
-
-| Etapa | Responsable | Evidencia |
-|---|---|---|
-| Solicitud de Cambio | @JoseIgnacioGC | [Issue #1](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/1) |
-| Implementacion | @PugconBeer | Rama `feature/hu01-ubicacion-salas` |
-| Pull Request | @PugconBeer | [PR #11](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/pull/11) con descripcion detallada y `Closes #1` |
-| Code Review y Aprobacion | @JoseIgnacioGC | Aprobacion formal en el PR |
-| Merge a `main` | @JoseIgnacioGC | Fusionado a la rama principal |
-| Versionado | No aplica | No se registraron tags de version en esta HU |
-| Release | No aplica | No se publicaron releases en GitHub |
-
-### Iteracion HU03 - Reservar sala
-
-| Etapa | Responsable | Evidencia |
-|---|---|---|
-| Solicitud de Cambio | @JoseIgnacioGC | [Issue #3](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/3) |
-| Implementacion | @JoseIgnacioGC | Rama `feature/hu03-reservar-sala` |
-| Pull Request | @JoseIgnacioGC | [PR #13](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/pull/13) con descripcion detallada y `Closes #3` |
-| Code Review y Aprobacion | @PugconBeer | Aprobacion formal en el PR |
-| Merge a `main` | @JoseIgnacioGC | Fusionado a la rama principal |
-| Versionado | No aplica | No se registraron tags de version en esta HU |
-| Release | No aplica | No se publicaron releases en GitHub |
-
-### Iteracion HU05 - Filtrar salas por caracteristicas
-
-| Etapa | Responsable | Evidencia |
-|---|---|---|
-| Solicitud de Cambio | @JoseIgnacioGC | [Issue #5](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/issues/5) |
-| Implementacion | @PugconBeer | Rama `feature/hu05-filtrar-salas` |
-| Pull Request | @PugconBeer | [PR #12](https://github.com/Proyecto-sala-de-estudio/backend-sala-de-estudios/pull/12) con descripcion detallada y `Closes #5` |
-| Code Review y Aprobacion | @JoseIgnacioGC | Aprobacion formal en el PR |
-| Merge a `main` | @PugconBeer | Fusionado a la rama principal |
-| Versionado | No aplica | No se registraron tags de version en esta HU |
-| Release | No aplica | No se publicaron releases en GitHub |
-
----
+### Rutas de acceso de los servicios
+Una vez que los servicios estén levantados y listos:
+- **Frontend (Interfaz de usuario):** `http://localhost:3001`
+- **Backend (API de reservas):** `http://localhost:3000`
+- **Documentación interactiva (Swagger):** `http://localhost:3000/docs`
+- **Base de Datos (PostgreSQL):** `localhost:5432`
 
 ## Responsabilidades del equipo
+| Integrante | Rol(es) | Ítems de la rúbrica a cargo |
+|------------|---------|-----------------------------|
+| Vicente Arancibia | Scrum Master / Quality Assurance | Demostración de la HU y criterios de aceptación, Casos de prueba |
+| Matías Henríquez | Arquitecto | Diagrama de despliegue y comp., Diagrama de componentes, Diagrama de secuencia |
+| José Leiva | Technical Lead | GitHub workflow, Deuda técnica / code smells |
+| Martín León | Developer | HU completa, Instalación y ejecución |
 
-| Integrante        | Rol           | Ítems de la rúbrica a cargo           |
-| ----------------- | ------------- | ------------------------------------- |
-| Vicente Arancibia | Scrum Master  | [4.1 Casos de prueba para las APIs]   |
-| Matías Henríquez  | Product Owner | [1.1 Mejora de Historias de Usuario]  |
-| José Leiva        | Developer     | [2.1 Desarrollo de dos HU en backend] |
-| Martín Leon       | Developer     | [3.1 Uso de GitHub Workflow]          |
+## Bonus (opcional)
+- Contenedores: sí — docker-compose en ./docker-compose.yml
+- Spec-driven development: sí — especificaciones en ./openspec/
