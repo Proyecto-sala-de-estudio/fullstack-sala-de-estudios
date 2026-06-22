@@ -45,6 +45,10 @@ Existen dos opciones alternativas e independientes para realizar la instalación
 ### Opción A: Ejecución local (Modo Release - Recomendado)
 Esta opción compila y despliega de manera automática y contenerizada la base de datos, el backend y el frontend:
 ```bash
+# 1. Configurar variables de entorno en la raíz
+cp .env.example .env
+
+# 2. Compilar y levantar la infraestructura completa
 docker compose up --build
 ```
 
