@@ -13,6 +13,7 @@ export default function Home() {
   const [loadingSubmit, setLoadingSubmit] = useState(false);
   const [toast, setToast] = useState(null);
   const [toastTimeout, setToastTimeout] = useState(null);
+  const [mounted, setMounted] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 
@@ -35,6 +36,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    setMounted(true);
     fetchData();
     return () => {
       if (toastTimeout) clearTimeout(toastTimeout);
@@ -214,7 +216,7 @@ export default function Home() {
 
               <button 
                 type="submit" 
-                disabled={loadingSubmit || apiStatus !== 'online'} 
+                disabled={mounted ? (loadingSubmit || apiStatus !== 'online') : false} 
                 className="btn btn-primary w-full text-white shadow-lg shadow-indigo-600/35 hover:scale-[1.01] active:scale-[0.99] transition-transform mt-2"
               >
                 {loadingSubmit ? <span className="loading loading-spinner loading-sm"></span> : 'Confirmar Reserva'}
