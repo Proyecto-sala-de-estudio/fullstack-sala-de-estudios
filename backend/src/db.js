@@ -45,6 +45,21 @@ const initDb = async (retries = 10, delay = 2000) => {
                 );
             `)
             console.log('Tablas inicializadas correctamente en PostgreSQL.')
+
+            // Insertar salas por defecto si la tabla está vacía
+            const countResult = await pool.query('SELECT COUNT(*) FROM salas')
+            if (parseInt(countResult.rows[0].count, 10) === 0) {
+                await pool.query(`
+                    INSERT INTO salas (nombre, edificio, piso, capacidad, equipamiento, estado) VALUES 
+                    ('Sala Einstein', 'Edificio Ciencias', '1', 4, 'Pizarra, Monitor, WiFi', 'disponible'),
+                    ('Sala Curie', 'Edificio Ciencias', '1', 6, 'Pizarra, Proyector, WiFi', 'disponible'),
+                    ('Sala Turing', 'Edificio Tecnología', '2', 8, 'Pizarra interactiva, WiFi', 'disponible'),
+                    ('Sala Lovelace', 'Edificio Tecnología', '2', 10, 'Computadoras, Proyector, WiFi', 'disponible'),
+                    ('Sala Newton', 'Edificio Central', '3', 5, 'Pizarra, WiFi', 'disponible')
+                `)
+                console.log('Salas iniciales creadas en la base de datos.')
+            }
+
             return
         } catch (error) {
             retries--
